@@ -31,7 +31,7 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir deployment
-          cp -r build/* deployment/
+          cp -r dist/* deployment/
           
   deploy:
       runs-on: ubuntu-latest
