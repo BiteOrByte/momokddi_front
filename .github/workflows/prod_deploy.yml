@@ -29,21 +29,28 @@ jobs:
 
       # EC2에 배포하기 위한 파일 준비
       - name: Prepare artifact
-        run: |
-          mkdir deployment
-          cp -r dist/* deployment/
-          
+        uses: actions/upload-artifact@v2
+        with:
+          name: jeommechu_web
+          path: dist
+        
   deploy:
       runs-on: ubuntu-latest
       needs: build
   
       steps:
+        # 위의 빌드작업한 JAR 파일 = 아티팩트를 다운로드
+        - name: Download build artifact
+          uses: actions/download-artifact@v2
+          with:
+            name: jeommechu_web
+            
         # EC2 서버로 빌드된 파일을 업로드
         - name: Deploy to EC2
           run: |
-            echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+            printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
             chmod 600 private_key.pem
-            scp -i private_key.pem -o StrictHostKeyChecking=no -r deployment/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/www/prod/web/
+            scp -i private_key.pem -o StrictHostKeyChecking=no -r jeommechu_web/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/www/prod/web/
             rm -f private_key.pem
   
         # SSH로 EC2에 접속하여 웹 서버 재시작 (예: Nginx)
