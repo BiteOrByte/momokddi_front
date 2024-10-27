@@ -49,13 +49,7 @@ jobs:
         - name: Deploy to EC2
           run: |
             printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-            sudo chmod 600 private_key.pem
-            sudo scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/www/prod/web
-            sudo rm -f private_key.pem
-  
-        # SSH로 EC2에 접속하여 웹 서버 재시작 (예: Nginx)
-        - name: Restart Nginx
-          run: |
-            ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-              sudo systemctl restart nginx
-            EOF
+            chmod 600 private_key.pem
+            scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ec2-user
+            rm -f private_key.pem
+
