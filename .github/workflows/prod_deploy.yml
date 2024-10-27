@@ -51,14 +51,15 @@ jobs:
             printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
             chmod 600 private_key.pem
             scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/front
-            rm -f private_key.pem
+            
 
         # SSH로 EC2에 접속하여 웹 서버 재시작 (예: Nginx)
         - name: Restart Nginx
           run: |
-            ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
               sudo cp -f -r /home/${{ secrets.EC2_USERNAME }}/front/* /www/prod/web/
               sudo rm -r /home/${{ secrets.EC2_USERNAME }}/front/*
               sudo systemctl restart nginx
             EOF
+            rm -f private_key.pem
 
