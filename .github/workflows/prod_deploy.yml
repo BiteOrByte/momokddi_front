@@ -50,6 +50,6 @@ jobs:
           run: |
             printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
             chmod 600 private_key.pem
-            scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ec2-user
+            scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/front
             rm -f private_key.pem
 
