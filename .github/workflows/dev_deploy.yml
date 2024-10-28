@@ -1,0 +1,63 @@
+name: Develop Deploy
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHub 저장소에서 코드 가져오기
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      # Node 설정  
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'  
+
+      # Dependencies 설치
+      - name: Install dependencies
+        run: npm install
+        
+      # React 프로젝트 빌드
+      - name: Build React App
+        run: npm run build
+
+      # EC2에 배포하기 위한 파일 준비
+      - name: Prepare artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jeommechu_web_dev
+          path: dist
+        
+  deploy:
+      runs-on: ubuntu-latest
+      needs: build
+  
+      steps:
+        # 위의 빌드작업한 JAR 파일 = 아티팩트를 다운로드
+        - name: Download build artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: jeommechu_web_dev
+            
+        # EC2 서버로 빌드된 파일을 업로드
+        - name: Deploy to EC2
+          run: |
+            printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+            chmod 600 private_key.pem
+            scp -i private_key.pem -o StrictHostKeyChecking=no -r /home/runner/work/jeommechu_front/jeommechu_front/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/front
+            
+        # SSH로 EC2에 접속하여 웹 서버 재시작 (예: Nginx)
+        - name: Restart Nginx
+          run: |
+            ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+              sudo cp -f -r /home/${{ secrets.EC2_USERNAME }}/front/* /www/dev/web/
+              sudo rm -r /home/${{ secrets.EC2_USERNAME }}/front/*
+              sudo systemctl restart nginx
+            EOF
+            rm -f private_key.pem
