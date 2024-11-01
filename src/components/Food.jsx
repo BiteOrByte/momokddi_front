@@ -1,72 +1,76 @@
+// App.js
 import { useState } from 'react';
-import { Checkbox, Typography, Button, Box, Stack } from '@mui/joy';
+import Checkbox from '@mui/joy/Checkbox';
+import Button from '@mui/joy/Button';
+import Typography from '@mui/joy/Typography';
+import Stack from '@mui/joy/Stack';
+import axios from 'axios';
 
-// React 컴포넌트로 변경
-const Food = () => {
-  // 선택한 카테고리를 상태로 관리
-  const [selectedFood, setSelectedFood] = useState('');
+function Food() {
+  const [selectedCategories, setSelectedCategories] = useState([]); // 타입 없이 기본 사용
+  const [food, setFood] = useState(null); // null로 초기화
 
-  // 체크박스 항목 리스트 (음식 카테고리)
-  const foodCategories = ['한식', '중식', '양식', '일식', '동남아식'];
+  // 음식 카테고리 목록
+  const categories = ['한식', '중식', '일식', '양식', '동남아식'];
 
-  // 선택된 카테고리 업데이트
-  const handleFoodSelect = (food) => {
-    setSelectedFood(food);
+  // 체크박스 변경 처리
+  const handleCheckboxChange = (category) => {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.includes(category)
+        ? prevCategories.filter((item) => item !== category)
+        : [...prevCategories, category],
+    );
+  };
+
+  // API 호출
+  const fetchFood = async () => {
+    try {
+      const params = new URLSearchParams();
+      selectedCategories.forEach((category) => params.append('category', category));
+
+      const response = await axios.get(`http://localhost:8080/food?${params.toString()}`);
+      setFood(response.data);
+    } catch (error) {
+      console.error('API 호출 중 오류:', error);
+    }
   };
 
   return (
-    <Box
-      sx={{
-        p: 4,
-        maxWidth: 400,
-        mx: 'auto',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 2,
-      }}
-    >
-      <Typography level="h2" fontSize="lg" mb={2}>
-        음식 카테고리를 선택하세요
+    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
+      <Typography level="h4" gutterBottom>
+        음식 카테고리 선택
       </Typography>
 
-      {/* 체크박스 항목 세로 배치 */}
-      <Stack spacing={2} alignItems="flex-start">
-        {foodCategories.map((food) => (
+      {/* 체크박스 리스트 */}
+      <Stack spacing={1}>
+        {categories.map((category) => (
           <Checkbox
-            key={food}
-            label={food}
-            size="lg"
-            checked={selectedFood === food}
-            onChange={() => handleFoodSelect(food)}
+            key={category}
+            label={category}
+            checked={selectedCategories.includes(category)}
+            onChange={() => handleCheckboxChange(category)}
           />
         ))}
       </Stack>
 
-      {/* 선택된 카테고리 이름을 표시 */}
-      <Box mt={4} textAlign="center">
-        <Typography level="h1" fontSize="xl" fontWeight="bold" mb={1}>
-          {selectedFood || '음식을 선택해주세요'}
-        </Typography>
-        <Typography level="body2" color="neutral.500">
-          {selectedFood ? `카테고리: ${selectedFood}` : ''}
-        </Typography>
-      </Box>
-
-      {/* 시작 버튼 */}
-      <Button
-        variant="solid"
-        color="primary"
-        size="lg"
-        onClick={() => alert(`선택한 카테고리: ${selectedFood}`)}
-        sx={{ mt: 4 }}
-        disabled={!selectedFood}
-      >
-        시작
+      {/* 서버 호출 버튼 */}
+      <Button onClick={fetchFood} variant="solid" color="primary" sx={{ mt: 2 }}>
+        음식 추천 받기
       </Button>
-    </Box>
+
+      {/* 응답 결과 표시 */}
+      {food && (
+        <div style={{ marginTop: '20px' }}>
+          <Typography level="h2" gutterBottom>
+            {food.name}
+          </Typography>
+          <Typography level="body1" color="neutral">
+            {food.category}
+          </Typography>
+        </div>
+      )}
+    </div>
   );
-};
+}
 
 export default Food;
