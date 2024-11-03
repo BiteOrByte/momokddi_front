@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function Food() {
   const [selectedCategories, setSelectedCategories] = useState([]); // 타입 없이 기본 사용
-  const [food, setFood] = useState(null); // null로 초기화
+  const [food, setFood] = useState({name:'메뉴를 추천해 드립니다.', category:'버튼을 눌러 음식을 골라주세요.'});
 
   // 음식 카테고리 목록
   const categories = ['한식', '중식', '일식', '양식', '동남아식'];
