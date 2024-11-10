@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Button, TextField, Typography, Container, Box, Link } from '@mui/material';
 
 const MyPage = () => {
-  // 컴포넌트 이름을 대문자로 시작
   const [nickname, setNickname] = useState('기본닉네임'); // 초기 닉네임 설정
   const [newNickname, setNewNickname] = useState(nickname);
   const [editMode, setEditMode] = useState(false);
@@ -32,49 +32,63 @@ const MyPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px', position: 'relative' }}>
-      <h3 style={{ textAlign: 'center' }}>마이 페이지</h3>
-      <div>
-        <h4>
-          닉네임:{' '}
+    <Container sx={{ paddingTop: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        마이 페이지
+      </Typography>
+      <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
+        <Typography variant="h6">
+          닉네임:
           {editMode ? (
-            <input
-              type="text"
+            <TextField
+              variant="outlined"
               value={newNickname}
               onChange={(e) => setNewNickname(e.target.value)}
-              style={{ marginLeft: '10px', marginRight: '10px' }}
+              sx={{ marginLeft: 1, marginRight: 1 }}
             />
           ) : (
             <span>{nickname}</span>
           )}
-        </h4>
-        {editMode ? (
-          <div>
-            <button onClick={handleSaveClick} style={{ marginRight: '10px' }}>
-              저장
-            </button>
-            <button onClick={handleCancelClick}>취소</button>
-          </div>
-        ) : (
-          <div>
-            <button onClick={handleEditClick} style={{ marginTop: '10px' }}>
-              닉네임 수정
-            </button>
-            <br />
-            <button onClick={handleLogout} style={{ marginLeft: '10px', marginTop: '10px' }}>
-              로그아웃
-            </button>
-          </div>
-        )}
-      </div>
-      <br />
-      <div>
-        <a href="#" onClick={handleWithdraw} className="withdraw">
+        </Typography>
+      </Box>
+
+      {editMode ? (
+        <Box sx={{ textAlign: 'center' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveClick}
+            sx={{ marginRight: 2 }}
+          >
+            저장
+          </Button>
+          <Button variant="outlined" onClick={handleCancelClick}>
+            취소
+          </Button>
+        </Box>
+      ) : (
+        <Box sx={{ textAlign: 'center', marginTop: 2 }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleEditClick}
+            sx={{ marginRight: 2 }}
+          >
+            닉네임 수정
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleLogout}>
+            로그아웃
+          </Button>
+        </Box>
+      )}
+
+      <Box sx={{ textAlign: 'center', marginTop: 2 }}>
+        <Link href="#" onClick={handleWithdraw} color="error" underline="hover">
           회원 탈퇴
-        </a>
-      </div>
-    </div>
+        </Link>
+      </Box>
+    </Container>
   );
 };
 
-export default MyPage; // 대문자로 시작하는 컴포넌트 이름을 사용
+export default MyPage;
