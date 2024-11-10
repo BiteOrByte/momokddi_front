@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const myPage = () => {
+const MyPage = () => {
+  // 컴포넌트 이름을 대문자로 시작
   const [nickname, setNickname] = useState('기본닉네임'); // 초기 닉네임 설정
   const [newNickname, setNewNickname] = useState(nickname);
   const [editMode, setEditMode] = useState(false);
@@ -22,22 +23,23 @@ const myPage = () => {
 
   const handleLogout = () => {
     console.log('로그아웃 되었습니다.');
-    // TODO 로그아웃 처리
+    // TODO: 로그아웃 처리
   };
 
   const handleWithdraw = () => {
     console.log('회원 탈퇴가 진행되었습니다.');
-    // TODO 회원 탈퇴 처리
+    // TODO: 회원 탈퇴 처리
   };
 
   return (
     <div style={{ padding: '20px', position: 'relative' }}>
-      <h3 style={{textAlign: 'center'}}>마이 페이지</h3>
+      <h3 style={{ textAlign: 'center' }}>마이 페이지</h3>
       <div>
         <h4>
-          닉네임: {editMode ? (
+          닉네임:{' '}
+          {editMode ? (
             <input
-              type='text'
+              type="text"
               value={newNickname}
               onChange={(e) => setNewNickname(e.target.value)}
               style={{ marginLeft: '10px', marginRight: '10px' }}
@@ -48,23 +50,26 @@ const myPage = () => {
         </h4>
         {editMode ? (
           <div>
-            <button onClick={handleSaveClick} style={{ marginRight: '10px'}}>저장</button>
+            <button onClick={handleSaveClick} style={{ marginRight: '10px' }}>
+              저장
+            </button>
             <button onClick={handleCancelClick}>취소</button>
           </div>
         ) : (
           <div>
-            <button onClick={handleEditClick} style={{ marginTop: '10px' }}>닉네임 수정</button>
+            <button onClick={handleEditClick} style={{ marginTop: '10px' }}>
+              닉네임 수정
+            </button>
             <br />
-            <button onClick={handleLogout} style={{ marginLeft: '10px', marginTop: '10px' }}>로그아웃</button>
+            <button onClick={handleLogout} style={{ marginLeft: '10px', marginTop: '10px' }}>
+              로그아웃
+            </button>
           </div>
         )}
       </div>
       <br />
       <div>
-        <a
-          href="#"
-          onClick={handleWithdraw}
-          className='withdraw' >
+        <a href="#" onClick={handleWithdraw} className="withdraw">
           회원 탈퇴
         </a>
       </div>
@@ -72,4 +77,4 @@ const myPage = () => {
   );
 };
 
-export default myPage;
+export default MyPage; // 대문자로 시작하는 컴포넌트 이름을 사용
