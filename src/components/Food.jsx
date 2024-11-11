@@ -1,14 +1,14 @@
 // App.js
 import { useState } from 'react';
-import Checkbox from '@mui/joy/Checkbox';
-import Button from '@mui/joy/Button';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
+import { Checkbox, Button, Typography, Stack, FormControlLabel } from '@mui/material';
 import axios from 'axios';
 
 function Food() {
   const [selectedCategories, setSelectedCategories] = useState([]); // 타입 없이 기본 사용
-  const [food, setFood] = useState({name:'메뉴를 추천해 드립니다.', category:'버튼을 눌러 음식을 골라주세요.'});
+  const [food, setFood] = useState({
+    name: '메뉴를 추천해 드립니다.',
+    category: '버튼을 눌러 음식을 골라주세요.',
+  });
 
   // 음식 카테고리 목록
   const categories = ['한식', '중식', '일식', '양식', '동남아식'];
@@ -37,34 +37,38 @@ function Food() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <Typography level="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom>
         음식 카테고리 선택
       </Typography>
 
       {/* 체크박스 리스트 */}
       <Stack spacing={1}>
         {categories.map((category) => (
-          <Checkbox
+          <FormControlLabel
             key={category}
+            control={
+              <Checkbox
+                checked={selectedCategories.includes(category)}
+                onChange={() => handleCheckboxChange(category)}
+              />
+            }
             label={category}
-            checked={selectedCategories.includes(category)}
-            onChange={() => handleCheckboxChange(category)}
           />
         ))}
       </Stack>
 
       {/* 서버 호출 버튼 */}
-      <Button onClick={fetchFood} variant="solid" color="primary" sx={{ mt: 2 }}>
+      <Button onClick={fetchFood} variant="contained" color="primary" sx={{ mt: 2 }}>
         음식 추천 받기
       </Button>
 
       {/* 응답 결과 표시 */}
       {food && (
         <div style={{ marginTop: '20px' }}>
-          <Typography level="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             {food.name}
           </Typography>
-          <Typography level="body1" color="neutral">
+          <Typography variant="body1" color="text.secondary">
             {food.category}
           </Typography>
         </div>
