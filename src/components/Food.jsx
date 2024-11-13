@@ -1,6 +1,5 @@
-// App.js
 import { useState } from 'react';
-import { Checkbox, Button, Typography, Stack, FormControlLabel } from '@mui/material';
+import { Checkbox, Button, Typography, Stack, FormControlLabel, Paper, Box, Container } from '@mui/material';
 import axios from 'axios';
 
 function Food() {
@@ -36,44 +35,61 @@ function Food() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <Typography variant="h4" gutterBottom>
-        음식 카테고리 선택
-      </Typography>
+    <Container maxWidth="sm" sx={{ paddingTop: 4 }}>
+      <Paper sx={{ padding: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'rgba(255, 255, 255, 0.65)' }}>
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+          음식 카테고리 선택
+        </Typography>
 
-      {/* 체크박스 리스트 */}
-      <Stack spacing={1}>
-        {categories.map((category) => (
-          <FormControlLabel
-            key={category}
-            control={
-              <Checkbox
-                checked={selectedCategories.includes(category)}
-                onChange={() => handleCheckboxChange(category)}
-              />
-            }
-            label={category}
-          />
-        ))}
-      </Stack>
+        {/* 체크박스 리스트 */}
+        <Stack spacing={2} sx={{ marginBottom: 2 }}>
+          {categories.map((category) => (
+            <FormControlLabel
+              key={category}
+              control={
+                <Checkbox
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCheckboxChange(category)}
+                  color="success"
+                  sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }} // 체크박스 아이콘 크기 조정
+                />
+              }
+              label={category}
+              sx={{ fontSize: '1.1rem', fontWeight: 'medium', color: '#333' }} // 라벨 크기 조정
+            />
+          ))}
+        </Stack>
 
-      {/* 서버 호출 버튼 */}
-      <Button onClick={fetchFood} variant="contained" color="primary" sx={{ mt: 2 }}>
-        음식 추천 받기
-      </Button>
+        {/* 서버 호출 버튼 */}
+        <Box sx={{ textAlign: 'center' }}>
+          <Button
+            onClick={fetchFood}
+            variant="contained"
+            color="success"
+            sx={{
+              paddingX: 4,
+              paddingY: 1.5,
+              fontSize: '1.1rem',
+              '&:hover': { backgroundColor: '#388e3c' },
+            }}
+          >
+            음식 추천 받기
+          </Button>
+        </Box>
 
-      {/* 응답 결과 표시 */}
-      {food && (
-        <div style={{ marginTop: '20px' }}>
-          <Typography variant="h5" gutterBottom>
-            {food.name}
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {food.category}
-          </Typography>
-        </div>
-      )}
-    </div>
+        {/* 응답 결과 표시 */}
+        {food && (
+          <Box sx={{ marginTop: 4, textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold'}}>
+              {food.name}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem', marginTop: 1 }}>
+              {food.category}
+            </Typography>
+          </Box>
+        )}
+      </Paper>
+    </Container>
   );
 }
 
