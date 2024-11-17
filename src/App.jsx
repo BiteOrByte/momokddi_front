@@ -3,7 +3,7 @@ import MyPage from './components/MyPage.jsx';
 import Header from './components/Header.jsx';
 import Food from './components/Food.jsx';
 import Login from './components/login/Login.jsx';
-import LoginHandeler from './components/login/LoginHandeler.jsx';
+// import LoginHandeler from './components/login/LoginHandeler.jsx';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Route path="/myPage" element={<><Header /><MyPage /></>} />
           <Route path="/food" element={<><Header /><Food /></>} />
           <Route path="/login" element={<Login />} />
-          <Route path="/login/callback" element={<LoginHandeler />} />
+          {/* <Route path="/login/callback" element={<LoginHandeler />} /> */}
         </Routes>
       </Router>
     </>
