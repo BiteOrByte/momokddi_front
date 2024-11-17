@@ -16,24 +16,14 @@ const LoginHandeler = () => {
           "Access-Control-Allow-Origin": "*",
         },
       }).then((res) => {
-        console.log(res);
-        localStorage.setItem("token", res.data.userInfo.nickName);
+        localStorage.setItem("token", res.data);
         navigate("/food");
-      });
+      }); // TODO: 에러 시 페이지 이동 필요
     };
 
     kakaoLogin();
   }, [code, navigate]);
 
-  return (
-    <div className="LoginHandeler">
-      <div className="notice">
-        <p>로그인 중입니다.</p>
-        <p>잠시만 기다려주세요.</p>
-        <div className="spinner"></div>
-      </div>
-    </div>
-  );
 };
 
 export default LoginHandeler;
