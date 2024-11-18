@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, TextField, Typography, Container, Box, Link, IconButton } from '@mui/material';
+import { Button, TextField, Typography, Container, Box, Link, IconButton, Paper } from '@mui/material';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import axios from 'axios';
 
@@ -33,7 +33,7 @@ const MyPage = () => {
         console.error('요청 오류:', error.message);
       }
     }
-  };  
+  };
 
   const handleSaveClick = () => {
     setNickname(newNickname);
@@ -56,69 +56,76 @@ const MyPage = () => {
   };
 
   return (
-    <Container sx={{ paddingTop: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        마이 페이지
-      </Typography>
-      <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
-        <Typography variant="h6">
-          닉네임:{' '}
-          {editMode ? (
-            <div>
-              <TextField
-              color="success" size="sm"
-              value={newNickname}
-              placeholder="닉네임" 
-              onChange={(e) => setNewNickname(e.target.value)}
-              sx={{ marginLeft: 1, marginRight: 1 }}
-            />
-            <IconButton onClick={handleRandomClick}>
-                <RefreshRoundedIcon />
-              </IconButton>
-            </div>
-          ) : (
-            <span>{nickname}</span>
-          )}
+    <Container maxWidth="sm" sx={{ paddingTop: 4 }}>
+      <Paper sx={{ padding: 3, borderRadius: 2, boxShadow: 3, backgroundColor: 'rgba(255, 255, 255, 0.65)' }}>
+        <Typography variant="h5" align="center" gutterBottom sx={{ fontWeight: 'bold'}}>
+          마이 페이지
         </Typography>
-      </Box>
 
-      {editMode ? (
-        <Box sx={{ textAlign: 'center' }}>
-          <Button
-            variant="solid"
-            color="success"
-            onClick={handleSaveClick}
-            sx={{ marginRight: 2 }}
-          >
-            저장
-          </Button>
-          <Button 
-            variant="outlined"
-            color="success" onClick={handleCancelClick}>
-            취소
-          </Button>
+        <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+            닉네임:{' '}
+            {editMode ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>
+                <TextField
+                  color="success"
+                  size="small"
+                  value={newNickname}
+                  placeholder="닉네임"
+                  onChange={(e) => setNewNickname(e.target.value)}
+                  sx={{ marginRight: 1, width: 200 }}
+                />
+                <IconButton onClick={handleRandomClick} sx={{ color: 'green' }}>
+                  <RefreshRoundedIcon />
+                </IconButton>
+              </Box>
+            ) : (
+              <span>{nickname}</span>
+            )}
+          </Typography>
         </Box>
-      ) : (
+
+        {editMode ? (
+          <Box sx={{ textAlign: 'center' }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleSaveClick}
+              sx={{ marginRight: 2, marginTop: 2 }}
+            >
+              저장
+            </Button>
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={handleCancelClick}
+              sx={{ marginTop: 2 }}
+            >
+              취소
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ textAlign: 'center', marginTop: 2 }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleEditClick}
+              sx={{ marginRight: 2 }}
+            >
+              닉네임 수정
+            </Button>
+            <Button variant="outlined" color="error" onClick={handleLogout}>
+              로그아웃
+            </Button>
+          </Box>
+        )}
+
         <Box sx={{ textAlign: 'center', marginTop: 2 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleEditClick}
-            sx={{ marginRight: 2 }}
-          >
-            닉네임 수정
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleLogout}>
-            로그아웃
-          </Button>
+          <Link href="#" onClick={handleWithdraw} color="error" underline="hover">
+            회원 탈퇴
+          </Link>
         </Box>
-      )}
-
-      <Box sx={{ textAlign: 'center', marginTop: 2 }}>
-        <Link href="#" onClick={handleWithdraw} color="error" underline="hover">
-          회원 탈퇴
-        </Link>
-      </Box>
+      </Paper>
     </Container>
   );
 };

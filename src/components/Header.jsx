@@ -27,7 +27,7 @@ function Header() {
 
   return (
     <AppBar position="static" color="default">
-      <Toolbar>
+      <Toolbar sx={{backgroundColor: "#f7be60"}}>
         {/* 점메추 문자열 클릭 시 / 경로로 이동 */}
         <Typography
           variant="h6"
