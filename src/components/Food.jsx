@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Checkbox, Button, Typography, Stack, FormControlLabel, Paper, Box, Container } from '@mui/material';
-import axios from 'axios';
+import { fetchData } from '../utils/apiUtils';
 
 function Food() {
   const [selectedCategories, setSelectedCategories] = useState([]); // 타입 없이 기본 사용
@@ -21,16 +21,13 @@ function Food() {
     );
   };
 
-  // API 호출
   const fetchFood = async () => {
-    try {
-      const params = new URLSearchParams();
-      selectedCategories.forEach((category) => params.append('category', category));
-
-      const response = await axios.get(`http://localhost:8080/food?${params.toString()}`);
-      setFood(response.data);
-    } catch (error) {
-      console.error('API 호출 중 오류:', error);
+    const params = new URLSearchParams();
+    selectedCategories.forEach((category) => params.append('category', category));
+    
+    const response = await fetchData(`/food?${params.toString()}`);
+    if (response) {
+      setFood(response);
     }
   };
 

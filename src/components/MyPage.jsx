@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Button, TextField, Typography, Container, Box, Link, IconButton, Paper } from '@mui/material';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
-import axios from 'axios';
+import { fetchData } from '../utils/apiUtils';
 
 const MyPage = () => {
   const [nickname, setNickname] = useState('기본닉네임'); // 초기 닉네임 설정
   const [newNickname, setNewNickname] = useState(nickname);
   const [editMode, setEditMode] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -15,23 +14,9 @@ const MyPage = () => {
   };
 
   const handleRandomClick = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/user/api/nickname`);
-      if (response.data) {
-        setNewNickname(response.data);
-      } else {
-        console.error('응답에서 닉네임을 찾을 수 없습니다.');
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error('서버 오류:', error.response.data);
-        alert('서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-      } else if (error.request) {
-        console.error('응답 없음:', error.request);
-        alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
-      } else {
-        console.error('요청 오류:', error.message);
-      }
+    const randomNickname = await fetchData('/user/api/nickname');
+    if (randomNickname) {
+      setNewNickname(randomNickname);
     }
   };
 
