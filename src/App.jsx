@@ -4,6 +4,7 @@ import Header from './components/Header.jsx';
 import Food from './components/Food.jsx';
 import Login from './components/login/Login.jsx';
 import LoginHandeler from './components/login/LoginHandeler.jsx';
+import ErrorPage from './components/ErrorPage.jsx';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/food" element={<><Header /><Food /></>} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/callback" element={<LoginHandeler />} />
+          <Route path="*" element={<ErrorPage errorCode={404}/>} />
         </Routes>
       </Router>
     </>
