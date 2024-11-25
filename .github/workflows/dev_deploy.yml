@@ -25,7 +25,7 @@ jobs:
         
       # React 프로젝트 빌드
       - name: Build React App
-        run: npm run build
+        run: npm run dev:build
 
       # EC2에 배포하기 위한 파일 준비
       - name: Prepare artifact
