@@ -13,33 +13,26 @@ const api = axios.create({
 
 // 공통 GET 요청 함수
 export const fetchData = async (url, data = {}) => {
-    try {
-      const response = await api.get(url, { data });
-      return response.data;
-    } catch (error) {
-      handleError(error);
-    }
+    const response = await api.get(url, { data });
+    return response.data;
   };
   
 // 공통 POST 요청 함수
 export const postData = async (url, data) => {
-  try {
-    const response = await api.post(url, data);
-    return response.data;
-  } catch (error) {
-    handleError(error);
-  }
+  const response = await api.post(url, data);
+  return response.data;
 };
 
 // 에러 처리 함수
 const handleError = (error) => {
+  let errorCode = null;
   if (error.response) {
-    console.error('서버 오류:', error.response.data);
-    alert('서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    const status = error.response.status;
+    errorCode = status;
   } else if (error.request) {
-    console.error('응답 없음:', error.request);
-    alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.');
+    errorCode = 503;
   } else {
-    console.error('요청 오류:', error.message);
+    errorCode = 400;
   }
+  return errorCode;
 };

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Checkbox, Button, Typography, Stack, FormControlLabel, Paper, Box, Container } from '@mui/material';
 import { fetchData } from '../utils/apiUtils';
+import ErrorPage from '../components/ErrorPage.jsx';
 
 function Food() {
   const [selectedCategories, setSelectedCategories] = useState([]); // 타입 없이 기본 사용
@@ -8,6 +9,7 @@ function Food() {
     name: '메뉴를 추천해 드립니다.',
     category: '버튼을 눌러 음식을 골라주세요.',
   });
+  const [errorCode, setErrorCode] = useState(null);
 
   // 음식 카테고리 목록
   const categories = ['한식', '중식', '일식', '양식', '동남아식'];
@@ -25,12 +27,20 @@ function Food() {
     const params = new URLSearchParams();
     selectedCategories.forEach((category) => params.append('category', category));
     
-    const response = await fetchData(`/food?${params.toString()}`);
-    if (response) {
-      setFood(response);
+    try {
+      const response = await fetchData(`/food?${params.toString()}`);
+      if (response) {
+        setFood(response);
+      }
+    } catch (error) {
+      setErrorCode(error);
     }
   };
 
+  if (errorCode) {
+    return <ErrorPage errorCode={errorCode} />;
+  }
+  
   return (
     <Container maxWidth="sm" sx={{ paddingTop: 4 }}>
       <Paper sx={{ padding: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'rgba(255, 255, 255, 0.65)' }}>

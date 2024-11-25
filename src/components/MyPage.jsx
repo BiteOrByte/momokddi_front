@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Button, TextField, Typography, Container, Box, Link, IconButton, Paper } from '@mui/material';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import { fetchData } from '../utils/apiUtils';
+import ErrorPage from '../components/ErrorPage.jsx';
 
 const MyPage = () => {
   const [nickname, setNickname] = useState('기본닉네임'); // 초기 닉네임 설정
   const [newNickname, setNewNickname] = useState(nickname);
   const [editMode, setEditMode] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -14,9 +16,13 @@ const MyPage = () => {
   };
 
   const handleRandomClick = async () => {
-    const randomNickname = await fetchData('/user/api/nickname');
-    if (randomNickname) {
-      setNewNickname(randomNickname);
+    try {
+      const randomNickname = await fetchData('/user/api/nickname');
+      if (randomNickname) {
+        setNewNickname(randomNickname);
+      }
+    } catch (error) {
+      setErrorCode(error);
     }
   };
 
@@ -39,6 +45,10 @@ const MyPage = () => {
     console.log('회원 탈퇴가 진행되었습니다.');
     // TODO: 회원 탈퇴 처리
   };
+
+  if (errorCode) {
+    return <ErrorPage errorCode={errorCode} />;
+  }
 
   return (
     <Container maxWidth="sm" sx={{ paddingTop: 4 }}>
