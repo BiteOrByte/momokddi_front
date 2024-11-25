@@ -3,23 +3,25 @@ import { useEffect } from "react";
 import axios from "axios";
 
 const LoginHandeler = () => {
+  const [errorCode, setErrorCode] = useState(null);
   const navigate = useNavigate();
   const code = new URL(window.location.href).searchParams.get("code");
 
   useEffect(() => {
     const kakaoLogin = async () => {
-      await axios({
-        method: "GET",
-        url: `http://localhost:8080/login/callback?code=${code}`,
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }).then((res) => {
-        localStorage.setItem("token", res.data);
+      try {
+        const response = await fetchData(`/api/login/callback?code=${code}`);
+
+        localStorage.setItem("token", response.data);
         navigate("/food");
-      }); // TODO: 에러 시 페이지 이동 필요
+      } catch(error) {
+        setErrorCode(error);
+      }
     };
+
+    if (errorCode) {
+      return <ErrorPage errorCode={errorCode} />;
+    }
 
     kakaoLogin();
   }, [code, navigate]);
